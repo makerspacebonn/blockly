@@ -137,5 +137,6 @@ Thanks to all these great people and open projects, it has been possible to make
 # Additional Infos
 To work with the esp32 otto on windows the following stuff needs to be installed
 - [arduino-cli](https://docs.arduino.cc/arduino-cli/installation/#latest-release)
+- arduino-cli core update-index
 - esp32 ```aduino-cli.exe core install esp32:esp32``` It could be that you have to up the timeout of arduino cli for that with ```arduino-cli.exe set network.connection_timeout 600s```
 - in the Arduino IDE, the library 'ESP32Servos' must be installed

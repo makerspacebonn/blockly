@@ -8,9 +8,12 @@ const { app } = require('electron')
 //var appVersion = app.getVersion()
 appVersion = '9.9.9'
 
-var arduino_basepath = process.platform == 'win32' ? arduino_basepath = './compilation/arduino' : path.join(__dirname, '../../compilation/arduino')
-var arduino_ide_cmd = process.platform == 'win32' ? 
+//var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../../compilation/arduino')
+var arduino_basepath = './compilation/arduino'
+
+var arduino_ide_cmd = process.platform == 'win32' ?
 	'arduino-cli.exe --config-file arduino-cli.yaml' : path.join(__dirname, './compilation/arduino/arduino-cli  --config-file arduino-cli.yaml ')
+arduino_ide_cmd = 'arduino-cli'
 
 window.addEventListener('load', function load(event) {
 
@@ -265,7 +268,7 @@ window.addEventListener('load', function load(event) {
 			messageDiv.innerHTML = Blockly.Msg.upload + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
 
 			cmd = `${arduino_ide_cmd} upload --port `+portserie.value +' -b ' + upload_arg +' sketch/sketch.ino'
-		    cmd = 'arduino-cli.exe upload -b esp32:esp32:esp32 --port ' + portserie.value + ' sketch/sketch.ino'
+		    //cmd = 'arduino-cli.exe upload -b esp32:esp32:esp32 --port ' + portserie.value + ' sketch/sketch.ino'
 			console.log('running command: ', cmd)
 			const { stdout2, stderr2 } = exec( cmd, {cwd:`${arduino_basepath}`}, function(err, stdout, stderr){
 			console.log(stdout2, stderr2)
