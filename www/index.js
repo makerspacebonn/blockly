@@ -40,8 +40,7 @@ window.addEventListener('load', function load(event) {
 		shell.openExternal('https://github.com/OttoDIY/blockly/issues')
 	})
 	$('#portserie').mouseover(async function(){
-		console.log("hovering")
-		const ports = await sp.SerialPort.list()
+		const ports = (await sp.SerialPort.list()).filter(port => port.vendorId)
 		console.log(ports)
 		var nb_com = localStorage.getItem("nb_com"), menu_opt = portserie.getElementsByTagName('option')
 		if(ports.length > nb_com){
@@ -107,27 +106,7 @@ window.addEventListener('load', function load(event) {
 			})
 		}
 	})
-	sp.list(function(err,ports){
-		var opt = document.createElement('option')
-		opt.value = "com"
-		opt.text = Blockly.Msg.com1
-		portserie.appendChild(opt)
-		ports.forEach(function(port) {
-			if (port.vendorId){
-				var opt = document.createElement('option')
-				opt.value = port.comName
-				opt.text = port.comName
-				portserie.appendChild(opt)
-			}
-		})
-		localStorage.setItem("nb_com",ports.length)
-		if (portserie.options.length > 1) {
-			portserie.selectedIndex = 1
-			localStorage.setItem("com",portserie.options[1].value)
-		} else {
-			localStorage.setItem("com","com")
-		}
-	})
+
 	$('#btn_version').on('click', function(){
 		$('#aboutModal').modal('hide')
 		ipcRenderer.send("version", "")
@@ -145,6 +124,7 @@ window.addEventListener('load', function load(event) {
 		ipcRenderer.send("factory", "")
 	})
 	$('#btn_verify').on('click', function(){
+		console.log("verify")
 		if (localStorage.getItem('content') == "off") {
 			var data = editor.getValue()
 		} else {
@@ -185,7 +165,7 @@ window.addEventListener('load', function load(event) {
 
 		var upload_arg = window.profile[carte].upload_arg
 		var cmd = `${arduino_ide_cmd} compile --fqbn ` + upload_arg +' sketch/sketch.ino'
-
+		console.log("cmd", cmd)
 		/*
 		   exec( cmd, {cwd:'./compilation/arduino'}, function(err, stdout, stderr){
 			//exec('verify.bat ' + carte, {cwd:'./compilation/arduino'}, function(err, stdout, stderr){
@@ -227,7 +207,7 @@ window.addEventListener('load', function load(event) {
 		localStorage.setItem("verif",true)
 	})
 	$('#btn_flash').on('click', function(){
-
+		console.log('Button flash')
 		var data = $('#pre_previewArduino').text()
 		var carte = localStorage.getItem('card')
 		var prog = profile[carte].prog
@@ -235,6 +215,9 @@ window.addEventListener('load', function load(event) {
 		var cpu = profile[carte].cpu
 		var com = portserie.value
 		var upload_arg = window.profile[carte].upload_arg
+
+		console.log('carte', carte)
+		console.log('profile', profile[carte])
 
 		if ( com == "com" ){
 			messageDiv.style.color = '#ff0000'
