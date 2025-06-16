@@ -20,7 +20,7 @@ window.addEventListener('load', function load(event) {
 	var portserie = document.getElementById('portserie')
 	var messageDiv = document.getElementById('messageDIV')
 
-	portserie.innerHTML = '<option>Nothing here yet.</option>'
+	portserie.innerHTML = '<option value="com">Nothing here yet.</option>'
 	localStorage.setItem("verif",false)
 	document.getElementById('versionapp').textContent = " Otto Blockly V" + appVersion
 	function uploadOK(){
@@ -209,6 +209,7 @@ window.addEventListener('load', function load(event) {
 
 		console.log('carte', carte)
 		console.log('profile', profile[carte])
+		console.log('com: ', com)
 
 		if ( com == "com" ){
 			messageDiv.style.color = '#ff0000'
