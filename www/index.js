@@ -3,14 +3,11 @@ var { exec } = require('child_process')
 var sp = require('serialport')
 var fs = require('fs')
 var path = require('path')
-
-const { app } = require('electron')
-//var appVersion = app.getVersion()
 appVersion = '9.9.9'
 
 var arduino_basepath = process.platform == 'win32' ? arduino_basepath = './compilation/arduino' : path.join(__dirname, '../../compilation/arduino')
 var arduino_ide_cmd = process.platform == 'win32' ? 
-	'arduino-cli.exe --config-file arduino-cli.yaml' : path.join(__dirname, './compilation/arduino/arduino-cli  --config-file arduino-cli.yaml ')
+	'arduino-cli.exe' : path.join(__dirname, './compilation/arduino/arduino-cli')
 
 window.addEventListener('load', function load(event) {
 
@@ -101,6 +98,7 @@ window.addEventListener('load', function load(event) {
 		$('#aboutModal').modal('hide')
 		ipcRenderer.send("version", "")
 	})
+
 	$('#btn_term').on('click', function(){
 		if (portserie.value=="com"){
 			$("#message").modal("show")
@@ -110,9 +108,11 @@ window.addEventListener('load', function load(event) {
 		}
 		if (localStorage.getItem("prog") == "python") { ipcRenderer.send("repl", "") } else { ipcRenderer.send("prompt", "") }
 	})
+
 	$('#btn_factory').on('click', function(){
 		ipcRenderer.send("factory", "")
 	})
+
 	$('#btn_verify').on('click', function(){
 		console.log("verify")
 		if (localStorage.getItem('content') == "off") {
@@ -157,25 +157,6 @@ window.addEventListener('load', function load(event) {
 		console.log("upload arg", upload_arg)
 		var cmd = `${arduino_ide_cmd} compile -b ` + upload_arg +' sketch/sketch.ino'
 		console.log("cmd", cmd)
-		/*
-		   exec( cmd, {cwd:'./compilation/arduino'}, function(err, stdout, stderr){
-			//exec('verify.bat ' + carte, {cwd:'./compilation/arduino'}, function(err, stdout, stderr){
-				if (stderr) {
-					rech=RegExp('token')
-					if (rech.test(stderr)){
-						messageDiv.style.color = '#ff0000'
-						messageDiv.innerHTML = Blockly.Msg.error + quitDiv
-					} else {
-						messageDiv.style.color = '#ff0000'
-						messageDiv.innerHTML = err.toString() + quitDiv
-					}
-					return
-				}
-
-				messageDiv.style.color = '#009000'
-				messageDiv.innerHTML = Blockly.Msg.check + ': OK' + quitDiv
-			}) */
-
 			exec(cmd , {cwd: arduino_basepath} , (error, stdout, stderr) => {
 			if (error) {
 
@@ -197,6 +178,7 @@ window.addEventListener('load', function load(event) {
 		}
 		localStorage.setItem("verif",true)
 	})
+
 	$('#btn_flash').on('click',async function(){
 		console.log('Button flash')
 		var data = $('#pre_previewArduino').text()
@@ -219,57 +201,37 @@ window.addEventListener('load', function load(event) {
 		if ( localStorage.getItem('verif') == "false" ){
 			messageDiv.style.color = '#000000'
 			messageDiv.innerHTML = Blockly.Msg.check + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
-			//fs.writeFile('./compilation/arduino/ino/sketch.ino', data, function(err){
 			console.log('writing to ', `${arduino_basepath}/sketch/sketch.ino`)
 			fs.writeFile(`${arduino_basepath}/sketch/sketch.ino`, data, function(err){
-
 				if (err) return console.log(err)
 			})
 
 
 			var cmd = `${arduino_ide_cmd} compile -b ` + upload_arg +'  --libraries userlibs/libraries sketch/sketch.ino'
-			//cmd = 'arduino-cli.exe compile -b esp32:esp32:esp32 --config-file arduino-cli.yaml --libraries userlibs/libraries sketch/sketch.ino'
 			console.log('basepath: ', arduino_basepath)
 			console.log("running: ", cmd)
 			const util = require('node:util');
 			const exec = util.promisify(require('node:child_process').exec);
 
 			try {
-				const { stdout, stderr } = await exec(cmd, {cwd: `${arduino_basepath}`});
-				console.log('stdout:', stdout);
-				
+				const { stderr } = await exec(cmd, {cwd: `${arduino_basepath}`});
 				if (typeof stderr !== 'undefined' && stderr !== '') {
-					console.log(typeof stderr)
-					console.log('stderr')
-					console.log(`:${stderr}:`)
-
 					messageDiv.style.color = '#ff0000'
 					messageDiv.innerHTML = stderr + quitDiv
 					return
 				}
 			} catch (error) {
-				console.log('catch')
 				messageDiv.style.color = '#ff0000'
 				messageDiv.innerHTML = error.toString() + quitDiv
 				return
 			}
-
-			console.log('continue')
-			
-
-			messageDiv.style.color = '#009000'
-			messageDiv.innerHTML = Blockly.Msg.check + ': ✅ OK' + quitDiv
-
 			
 			messageDiv.style.color = '#000000'
 			messageDiv.innerHTML = Blockly.Msg.upload + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
 
-			cmd = `${arduino_ide_cmd} upload --port `+portserie.value +' -b ' + upload_arg +' sketch/sketch.ino'
-		    cmd = 'arduino-cli.exe upload -b esp32:esp32:esp32 --port ' + portserie.value + ' sketch/sketch.ino'
+			cmd = `${arduino_ide_cmd} upload --port ${portserie.value} -b ${upload_arg} sketch/sketch.ino`
 			console.log('running command: ', cmd)
-			const { stdout2, stderr2 } = exec( cmd, {cwd:`${arduino_basepath}`}, function(err, stdout, stderr){
-			console.log(stdout2, stderr2)
-			//exec('flash.bat ' + cpu + ' ' + prog + ' '+ com + ' ' + speed, {cwd: './compilation/arduino'} , function(err, stdout, stderr){
+			const { stderr2 } = exec( cmd, {cwd:`${arduino_basepath}`}, function(err, stdout, stderr){
 			if (typeof stderr2 !== 'undefined' && stderr2 !== '') {
 				messageDiv.style.color = '#ff0000'
 				messageDiv.innerHTML = stderr2 + quitDiv
@@ -285,6 +247,7 @@ window.addEventListener('load', function load(event) {
 
 		messageDiv.style.color = '#000000'
 		messageDiv.innerHTML = Blockly.Msg.upload + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
+		
 		if ( prog == "python" ) {
 			if ( cpu == "cortexM0" ) {
 				var cheminFirmware = "./compilation/python/firmware.hex"
@@ -350,6 +313,7 @@ window.addEventListener('load', function load(event) {
 		}
 		localStorage.setItem("verif",false)
 	})
+
 	$('#btn_saveino').on('click', function(){
 		if (localStorage.getItem("prog") == "python") { ipcRenderer.send('save-py') } else { ipcRenderer.send('save-ino') }
 	})
