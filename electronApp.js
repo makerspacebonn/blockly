@@ -9,12 +9,25 @@ var promptOptions
 var promptAnswer
 autoUpdater.autoDownload = false
 autoUpdater.logger = null
+console.log('appVersion', app.getVersion())
 function createWindow () {
-	mainWindow = new BrowserWindow({width: 1240, height: 700, icon: 'www/media/app.ico', frame: false, movable: true})
+	mainWindow = new BrowserWindow({
+		width: 1240,
+		height: 700,
+		icon: 'www/media/app.ico',
+		frame: false,
+		movable: true,
+		webPreferences: {
+			webSecurity: false,
+			contextIsolation: false,
+			nodeIntegration: true
+		}
+	})
+	mainWindow.webContents.openDevTools()
 	if (process.platform == 'win32' && process.argv.length >= 2) {
-		mainWindow.loadURL("file://" + path.join(__dirname, '../../www/index.html?url='+process.argv[1]))
+		mainWindow.loadURL("file://" + path.join(__dirname, '/index.html?url='+process.argv[1]))
 	} else {
-		mainWindow.loadURL("file://" + path.join(__dirname, '../../www/index.html'))
+		mainWindow.loadURL("file://" + path.join(__dirname, '/index.html'))
 	}
 	mainWindow.setMenu(null)
 	mainWindow.on('closed', function () {

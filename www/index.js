@@ -3,16 +3,23 @@ var { exec } = require('child_process')
 var sp = require('serialport')
 var fs = require('fs')
 var path = require('path')
-var appVersion = window.require('electron').remote.app.getVersion()
+
+const { app } = require('electron')
+//var appVersion = app.getVersion()
+appVersion = '9.9.9'
 
 var arduino_basepath = process.platform == 'win32' ? arduino_basepath = './compilation/arduino' : path.join(__dirname, '../../compilation/arduino')
 var arduino_ide_cmd = process.platform == 'win32' ? 'arduino-cli.exe' : arduino_ide_cmd = path.join(__dirname, '../../compilation/arduino/arduino-cli')
 
 window.addEventListener('load', function load(event) {
+
+
 	var quitDiv = '<button type="button" class="close" data-dismiss="modal" aria-label="Close">&#215;</button>'
 	var checkBox = document.getElementById('verifyUpdate')
 	var portserie = document.getElementById('portserie')
 	var messageDiv = document.getElementById('messageDIV')
+
+	portserie.innerHTML = '<option>Nothing here yet.</option>'
 	localStorage.setItem("verif",false)
 	document.getElementById('versionapp').textContent = " Otto Blockly V" + appVersion
 	function uploadOK(){
@@ -32,30 +39,32 @@ window.addEventListener('load', function load(event) {
 	$('#btn_contact').on('click', function(){
 		shell.openExternal('https://github.com/OttoDIY/blockly/issues')
 	})
-	$('#portserie').mouseover(function(){
-		sp.list(function(err,ports) {
-			var nb_com = localStorage.getItem("nb_com"), menu_opt = portserie.getElementsByTagName('option')
-			if(ports.length > nb_com){
-				ports.forEach(function(port){
-					if (port.vendorId){
-						var opt = document.createElement('option')
-						opt.value = port.comName
-						opt.text = port.comName
-						portserie.appendChild(opt)
-						localStorage.setItem("com",port.comName)
-					}
-				})
-				localStorage.setItem("nb_com",ports.length)
-				localStorage.setItem("com",portserie.options[1].value)
-			}
-			if(ports.length < nb_com){
-				while(menu_opt[1]) {
-					portserie.removeChild(menu_opt[1])
+	$('#portserie').mouseover(async function(){
+		console.log("hovering")
+		const ports = await sp.SerialPort.list()
+		console.log(ports)
+		var nb_com = localStorage.getItem("nb_com"), menu_opt = portserie.getElementsByTagName('option')
+		if(ports.length > nb_com){
+			ports.forEach(function(port){
+				console.log(port)
+				if (port.vendorId){
+					var opt = document.createElement('option')
+					opt.value = port.path
+					opt.text = port.path
+					portserie.appendChild(opt)
+					localStorage.setItem("com",port.path)
 				}
-				localStorage.setItem("com","com")
-				localStorage.setItem("nb_com",ports.length)
+			})
+			localStorage.setItem("nb_com",ports.length)
+			localStorage.setItem("com",portserie.options[1].value)
+		}
+		if(ports.length < nb_com){
+			while(menu_opt[1]) {
+				portserie.removeChild(menu_opt[1])
 			}
-		})
+			localStorage.setItem("com","com")
+			localStorage.setItem("nb_com",ports.length)
+		}
 	})
 	$('#btn_copy').on('click', function(){
 		clipboard.writeText($('#pre_previewArduino').text())
