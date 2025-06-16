@@ -30,38 +30,34 @@
   "microbit",
   "MICROBIT"
  ],
-
  "scripts": {
-    "postinstall": "electron-builder install-app-deps",
-    "start": "electron .",
-    "compiler": "electron-builder --win --ia32",
-    "compiler:mac": "electron-builder --mac",
-    "compilerlinux": "build --linux --x64",
-    "compilerlinux32": "build --linux --ia32",
-    "deb64": "electron-installer-debian --src dist/linux-unpacked --dest dist/installers/ --arch amd64 --config debconfig.json",
-    "deb32": "electron-installer-debian --src dist/linux-unpacked32 --dest dist/installers/ --arch ia32 --config debconfig.json",
-    "publier": "electron-builder --win --ia32 -p always"
-},
-  
-"build": {
-    "appId": "com.electron.ottoblockly",
-    "asar": false,
-    "directories": {
-        "buildResources": "./build",
-        "output": "./dist"
+  "postinstall": "electron-builder install-app-deps",
+  "start": "electron .",
+  "compiler": "electron-builder --win --ia32",
+  "compiler:mac": "electron-builder --mac",
+  "compilerlinux": "build --linux --x64",
+  "compilerlinux32": "build --linux --ia32",
+  "deb64": "electron-installer-debian --src dist/linux-unpacked --dest dist/installers/ --arch amd64 --config debconfig.json",
+  "deb32": "electron-installer-debian --src dist/linux-unpacked32 --dest dist/installers/ --arch ia32 --config debconfig.json",
+  "publier": "electron-builder --win --ia32 -p always"
  },
- 
-"nsis": {
-    "installerIcon": "build/install.ico",
-    "uninstallerIcon": "build/app.ico",
-    "oneClick": false,
-    "perMachine": true,
-    "deleteAppDataOnUninstall": true,
-    "allowToChangeInstallationDirectory": true,
-    "runAfterFinish": true,
-    "include": "build/ottoblockly.nsh"
-},
- 
+ "build": {
+  "appId": "com.electron.ottoblockly",
+  "asar": false,
+  "directories": {
+   "buildResources": "./build",
+   "output": "./dist"
+  },
+  "nsis": {
+   "installerIcon": "build/install.ico",
+   "uninstallerIcon": "build/app.ico",
+   "oneClick": false,
+   "perMachine": true,
+   "deleteAppDataOnUninstall": true,
+   "allowToChangeInstallationDirectory": true,
+   "runAfterFinish": true,
+   "include": "build/ottoblockly.nsh"
+  },
   "win": {
    "target": [
     "portable",
@@ -130,16 +126,15 @@
   "url": "https://github.com/OttoDIY/blockly/issues"
  },
  "devDependencies": {
-  "electron": "13.6.6",
-  "electron-builder": "21.2.0",
-  "electron-installer-dmg": "3.0.0",
-  "electron-installer-debian": "^3.1.0"
+  "electron": "36.4.0",
+  "electron-builder": "26.0.12",
+  "electron-installer-debian": "^3.2.0",
+  "electron-installer-dmg": "5.0.1"
  },
  "dependencies": {
-  "ajv": "6.12.3",
-  "child_process": "1.0.2",
-  "electron-updater": "4.0.6",
-  "serialport": "7.1.4",
-  "child_process": "1.0.2"
+  "ajv": "^8.17.1",
+  "child_process": "^1.0.2",
+  "electron-updater": "^6.6.5",
+  "serialport": "^13.0.0"
  }
 }
