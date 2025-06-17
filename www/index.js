@@ -2,21 +2,36 @@ var { ipcRenderer, shell, clipboard } = require("electron")
 var { exec } = require('child_process')
 var sp = require('serialport')
 var fs = require('fs')
-var path = require('path')
+
 
 const { app } = require('electron')
+const util = require("node:util");
+const path = require("node:path");
+const {shellPathSync} = require("shell-path");
 //var appVersion = app.getVersion()
 appVersion = '9.9.9'
 
 //var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../../compilation/arduino')
-var arduino_basepath = './compilation/arduino'
+var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../../../compilation/arduino')
 
 var arduino_ide_cmd = process.platform == 'win32' ?
 	'arduino-cli.exe --config-file arduino-cli.yaml' : path.join(__dirname, './compilation/arduino/arduino-cli  --config-file arduino-cli.yaml ')
 arduino_ide_cmd = 'arduino-cli'
 
 window.addEventListener('load', function load(event) {
+	{
+		const util = require('node:util');
+		const exec = util.promisify(require('node:child_process').exec);
+	}
+	console.log(process.env.PATH);
+	if (process.platform !== 'win32') {
+		process.env.PATH = shellPathSync();
+	}
 
+
+	console.log(process.env.PATH);
+	var isArduinoAvailable = require('hasbin').sync('arduino-cli')
+	console.log('isArduinoAvailable: ', isArduinoAvailable)
 
 	var quitDiv = '<button type="button" class="close" data-dismiss="modal" aria-label="Close">&#215;</button>'
 	var checkBox = document.getElementById('verifyUpdate')
