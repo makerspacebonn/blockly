@@ -34,25 +34,27 @@ Blockly.Blocks['otto_configuration'] = {init: function() {
 
 Blockly.Arduino['otto_configuration'] = function(block) {
 
-  var PIN_YL= block.getFieldValue('PIN_YL');
-  var PIN_YR= block.getFieldValue('PIN_YR');
-  var PIN_RL= block.getFieldValue('PIN_RL');
-  var PIN_RR= block.getFieldValue('PIN_RR');
-  var PIN_Buzzer= block.getFieldValue('PIN_Buzzer');
+    var PIN_YL= block.getFieldValue('PIN_YL');
+    var PIN_YR= block.getFieldValue('PIN_YR');
+    var PIN_RL= block.getFieldValue('PIN_RL');
+    var PIN_RR= block.getFieldValue('PIN_RR');
+    var PIN_Buzzer= block.getFieldValue('PIN_Buzzer');
 
-  Blockly.Arduino.includes_['otto_lib'] = '#include <Otto.h>\n'
-	+ 'Otto Otto;';
+    Blockly.Arduino.includes_['otto_lib'] = `#include <Otto.h>
+Otto Otto;
+`;
 
-  Blockly.Arduino.definitions_['otto_legs'] = '#define LeftLeg '+ PIN_YL +' // left leg pin, servo[0]\n'
- 	+ '#define RightLeg '+ PIN_YR +' // right leg pin, servo[1]\n'
-	+ '#define LeftFoot '+ PIN_RL +' // left foot pin, servo[2]\n'
-    + '#define RightFoot '+ PIN_RR +' // right foot pin, servo[3]\n'
-    + '#define Buzzer '+ PIN_Buzzer +' //buzzer pin \n';
+    Blockly.Arduino.definitions_['otto_legs'] = `#define LeftLeg ${PIN_YL} // left leg pin, servo[0]
+#define RightLeg ${PIN_YR} // right leg pin, servo[1]
+#define LeftFoot ${PIN_RL} // left foot pin, servo[2]
+#define RightFoot ${PIN_RR} // right foot pin, servo[3]
+#define Buzzer ${PIN_Buzzer} //buzzer pin
+`;
 
-  Blockly.Arduino.setups_['otto_init']='Otto.init(LeftLeg, RightLeg, LeftFoot, RightFoot, true, Buzzer);\n'
-  + 'Otto.home();\n';
-  var code = '';
-  return code;
+    Blockly.Arduino.setups_['otto_init']=`Otto.init(LeftLeg, RightLeg, LeftFoot, RightFoot, false, Buzzer);
+`;
+    var code = '';
+    return code;
 };
 
 Blockly.Blocks['otto_home'] = {init: function() {
