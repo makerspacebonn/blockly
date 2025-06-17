@@ -396,8 +396,9 @@ window.addEventListener('load', async function load(event) {
 		}
 	})
 	$('#btn_saveXML').on('click', function () {
+		console.log('clicked saveXML')
 		if (localStorage.getItem("content") == "on") {
-			ipcRenderer.send('save-bloc')
+			ipcRenderer.send('save-bloc', {info: 'Hallo'})
 		} else {
 			if (localStorage.getItem("prog") == "python") {
 				ipcRenderer.send('save-py')
@@ -426,8 +427,13 @@ window.addEventListener('load', async function load(event) {
 			})
 		}
 	})
+	ipcRenderer.on('error', (error) => {
+		console.error(error)
+	})
 	ipcRenderer.on('saved-bloc', function (event, path) {
-		if (path === null) {
+		console.log('bloc-saved', event, path)
+		console.log('Path: ', path)
+		if (!path || path.canceled) {
 			return
 		} else {
 			var xml = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
@@ -447,7 +453,7 @@ window.addEventListener('load', async function load(event) {
 				}
 			}
 			var code = Blockly.Xml.domToPrettyText(xml)
-			fs.writeFile(path, code, function (err) {
+			fs.writeFile(path.filePath, code, function (err) {
 				if (err) return console.log(err)
 			})
 		}

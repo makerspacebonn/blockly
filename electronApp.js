@@ -146,15 +146,21 @@ ipcMain.on('save-py', function (event) {
 		event.sender.send('saved-py', filename)
 	})
 })
-ipcMain.on('save-bloc', function (event) {
+ipcMain.on('save-bloc', function (event, payload) {
+	console.log('save-block', payload)
 	dialog.showSaveDialog(mainWindow,{
 		title: 'Save format .BLOC',
 		defaultPath: 'Otto_block',
 		filters: [{ name: 'Ottoblockly', extensions: ['bloc'] }]
-	},
-	function(filename){
-		event.sender.send('saved-bloc', filename)
 	})
+		.then((param) => {
+			console.log(param)
+			event.sender.send('saved-bloc', param)
+		})
+		.catch(error => {
+			console.log("error", error)
+			event.sender.send('error', error)
+		})
 })
 ipcMain.on('save-csv', function (event) {
 	dialog.showSaveDialog(mainWindow,{
