@@ -113,9 +113,6 @@
 				</button>
 				</div>
 			 <select id="languageMenu" onchange="BlocklyDuino.changelanguage();"   style="height: 42px; border-radius: 5px; font-weight: bold" ></select>
-			<!--	<button id="btn_config" class="btn btn-arduino" data-toggle="modal" data-target="#configModal">
-					<span class="fa fa-cog fa-lg fa-fw"></span>
-		</button> -->
 				<button id="btn_example" class="btn btn-arduino-rect" data-toggle="modal" data-target="#exampleModal">
 					<span class="fa fa-graduation"></span>
 				</button>
@@ -131,16 +128,12 @@
 					<span class="fa fa-folder-open"></span>
 				</button>
 				<input type="file" id="load" accept=".bloc,.xml,.py,.ino" style="display: none;" />
-<!--	<button id="btn_print" class="btn btn-arduino-rect">		<span class="fa fa-camera"> </span></button>-->
 				<button id="btn_undo" class="btn btn-arduino-rect">
 					<span class="fa fa-undo"> </span>
 				</button>
 				<button id="btn_redo" class="btn btn-arduino-rect">
 					<span class="fa fa-repeat"> </span>
 				</button>
-
-			<!--	<button id="btn_card" class="btn btn-arduino-rect" data-toggle="modal" data-target="#card" style="margin-top: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
-					<span class="fa fa-microchip" > </span>				</button>-->
 				<select style="height: 0px; height: 42px; border-radius: 5px;font-weight: bold" id="boards" onchange="BlocklyDuino.change_card();">
 					<option value="OttoESP" >ESP8266</option>
 					<option value="nanooptiboot">♾ Nano</option>
@@ -156,13 +149,7 @@
 					<option value="micro" >♾ Micro</option>
 					<option value="mega" >♾ Mega</option>
 					<option value="mkrwifi1010" >♾ MKR WiFi</option>
-						<!--<option value="mini" >Arduino Mini</option>
-							<option value="wemosD1miniPro" >WeMos D1 mini</option>
-						<option value="pro8" >Arduino Pro / Pro Mini 3.3V</option>
-						<option value="yun" >Arduino Yun</option> -->
 				</select>
-			<!--	<button id="btn_usb" class="btn btn-arduino-rect" data-toggle="modal" data-target="#usb" style="margin-top: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
-					<span class="fa fa-usb"></span>		</button> -->
 				<select style="height: 0px; height: 42px; border-radius: 5px;font-weight: bold" id="portserie" onchange="BlocklyDuino.save_com();"></select>
 				<button id="btn_verify" class="btn btn-arduino" data-toggle="modal" data-target="#message">
 					<span class="fa fa-check fa-1_5x"> </span>
