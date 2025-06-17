@@ -1,4 +1,5 @@
 *.DS_Store
+/compilation/arduino/sketch/
 /compilation/arduino/packages/
 /compilation/arduino/suppr/
 /compilation/arduino/tmp/
