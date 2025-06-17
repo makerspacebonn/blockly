@@ -140,3 +140,13 @@ To work with the esp32 otto on windows the following stuff needs to be installed
 - arduino-cli core update-index
 - esp32 ```aduino-cli.exe core install esp32:esp32``` It could be that you have to up the timeout of arduino cli for that with ```arduino-cli.exe set network.connection_timeout 600s```
 - in the Arduino IDE, the library 'ESP32Servos' must be installed
+
+# ToDos
+- Feststellen, wenn arduino nicht installiert ist und Hilfestellung geben
+- Feststellen, wenn die esp32 sdk und andere libs nicht installiert sind und Hilfestellung geben.
+- Einen Weg finden,um die MSBOttos zu kalibrieren
+- Die Programmierblöccke überprüfen auf MSBOtto tauglichkeit.
+
+Ideas
+- Vielleicht auf python umstellen, damit an nicht immer neu bauen muss?
+- use webusb with usb to detect devices
