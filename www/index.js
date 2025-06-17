@@ -9,7 +9,7 @@ const {shellPathSync} = require("shell-path");
 const appVersion = '9.9.9'
 
 //var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../../compilation/arduino')
-var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../../../compilation/arduino')
+var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../compilation/arduino')
 
 var arduino_ide_cmd = process.platform == 'win32' ?
 	'arduino-cli.exe --config-file arduino-cli.yaml' : path.join(__dirname, './compilation/arduino/arduino-cli  --config-file arduino-cli.yaml ')
@@ -102,23 +102,7 @@ window.addEventListener('load', async function load(event) {
 		localStorage.setItem("verif", false)
 		ipcRenderer.send('save-bin')
 	})
-	$.ajax({
-		cache: false,
-		url: "../config.json",
-		dataType: "json",
-		success: function (data) {
-			$.each(data, function (i, update) {
-				if (update == "true") {
-					$('#verifyUpdate').prop('checked', true)
-					checkBox.dispatchEvent(new Event('change'))
-					ipcRenderer.send("version", "")
-				} else {
-					$('#verifyUpdate').prop('checked', false)
-					checkBox.dispatchEvent(new Event('change'))
-				}
-			})
-		}
-	})
+
 	checkBox.addEventListener('change', function (event) {
 		if (event.target.checked) {
 			fs.writeFile('config.json', '{ "update": "true" }', function (err) {
