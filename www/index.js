@@ -1,7 +1,7 @@
 const { ipcRenderer, shell, clipboard } = require("electron")
 const { exec } = require('child_process')
 const serialPort = require('serialport')
-const fs = require('fs')
+const fs = require('fs/promises')
 
 
 const path = require("node:path");
@@ -259,11 +259,15 @@ window.addEventListener('load', async function load(event) {
 			messageDiv.innerHTML = Blockly.Msg.check + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
 			//fs.writeFile('./compilation/arduino/ino/sketch.ino', data, function(err){
 			console.log('writing to ', `${arduino_basepath}/sketch/sketch.ino`)
-			fs.writeFile(`${arduino_basepath}/sketch/sketch.ino`, data, function (err) {
-
-				if (err) return console.log(err)
-			})
-
+			try {
+				await fs.writeFile(`${arduino_basepath}/sketch/sketch.ino`, data)
+				console.log("writing done")
+			} catch (error) {
+				console.error(error)
+				messageDiv.style.color = '#ff0000'
+				messageDiv.innerHTML = error.toString() + quitDiv
+				return
+			}
 
 			var cmd = `${arduino_ide_cmd} compile -b ` + upload_arg + '  --libraries userlibs/libraries sketch/sketch.ino'
 			//cmd = 'arduino-cli.exe compile -b esp32:esp32:esp32 --config-file arduino-cli.yaml --libraries userlibs/libraries sketch/sketch.ino'
