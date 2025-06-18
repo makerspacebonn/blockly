@@ -40,6 +40,8 @@ class Otto
     void _moveServos(int time, int  servo_target[]);
     void _moveSingle(int position,int  servo_number);
     void oscillateServos(int A[4], int O[4], int T, double phase_diff[4], float cycle);
+    void _moveHome();
+    void _bend(int dir);
 
     //-- HOME = Otto at rest position
     void home();

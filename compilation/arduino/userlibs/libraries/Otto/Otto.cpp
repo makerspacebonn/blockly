@@ -16,7 +16,19 @@ void Otto::init(int YL, int YR, int RL, int RR, bool load_calibration, int Buzze
 
   attachServos();
   isOttoResting=false;
+  load_calibration = false;
+/*
+  trim[0]=-100;
+  trim[1]=0;
+  trim[2]=40;
+  trim[3]=-14;
 
+ for (int i = 0; i < 4; i++) {
+   int servo_trim = EEPROM.read(i);
+   if (servo_trim > 128) servo_trim -= 256;
+   servo[i].SetTrim(trim[i]);
+ }
+*/
   if (load_calibration) {
     for (int i = 0; i < 4; i++) {
       int servo_trim = EEPROM.read(i);
@@ -157,6 +169,11 @@ void Otto::_execute(int A[4], int O[4], int T, double phase_diff[4], float steps
   oscillateServos(A,O, T, phase_diff,(float)steps-cycles);
 }
 
+void Otto::_moveHome() {
+    int homes[4]={90, 90, 90, 90}; //All the servos at rest position
+    _moveServos(500,homes);
+}
+
 ///////////////////////////////////////////////////////////////////
 //-- HOME = Otto at rest position -------------------------------//
 ///////////////////////////////////////////////////////////////////
@@ -164,13 +181,13 @@ void Otto::home(){
 
   if(isOttoResting==false){ //Go to rest position only if necessary
 
-    int homes[4]={90, 90, 90, 90}; //All the servos at rest position
-    _moveServos(500,homes);   //Move the servos in half a second
+    _moveHome() ;  //Move the servos in half a second
 
     detachServos();
     isOttoResting=true;
   }
 }
+
 
 bool Otto::getRestState(){
     return isOttoResting;
@@ -193,8 +210,7 @@ void Otto::jump(float steps, int T){
 
   int up[]={90,90,150,30};
   _moveServos(T,up);
-  int down[]={90,90,90,90};
-  _moveServos(T,down);
+  _moveHome();
 }
 
 //---------------------------------------------------------
@@ -251,6 +267,8 @@ void Otto::turn(float steps, int T, int dir){
   _execute(A, O, T, phase_diff, steps);
 }
 
+
+
 //---------------------------------------------------------
 //-- Otto gait: Lateral bend
 //--  Parameters:
@@ -259,35 +277,36 @@ void Otto::turn(float steps, int T, int dir){
 //--    dir: RIGHT=Right bend LEFT=Left bend
 //---------------------------------------------------------
 void Otto::bend (int steps, int T, int dir){
+  //Bend movement
+  for (int i=0;i<steps;i++)
+  {
+    _bend(dir);
+    delay(T*0.8);
+    _moveHome();
+  }
 
-  //Parameters of all the movements. Default: Left bend
-  int bend1[4]={90, 90, 62, 35};
-  int bend2[4]={90, 90, 62, 105};
-  int homes[4]={90, 90, 90, 90};
+}
+
+void Otto::_bend(int dir) {
+int bend1[4]={90, 90, 50, 0};
+  int bend2[4]={90, 90, 50, 105};
 
   //Time of one bend, constrained in order to avoid movements too fast.
   //T=max(T, 600);
   //Changes in the parameters if right direction is chosen
   if(dir==-1)
   {
-    bend1[2]=180-35;
-    bend1[3]=180-60;  //Not 65. Otto is unbalanced
-    bend2[2]=180-105;
-    bend2[3]=180-60;
+    bend1[2]=180;
+    bend1[3]=120;  //Not 65. Otto is unbalanced
+    bend2[2]=75;
+    bend2[3]=120;
   }
 
   //Time of the bend movement. Fixed parameter to avoid falls
   int T2=800;
 
-  //Bend movement
-  for (int i=0;i<steps;i++)
-  {
-    _moveServos(T2/2,bend1);
-    _moveServos(T2/2,bend2);
-    delay(T*0.8);
-    _moveServos(500,homes);
-  }
-
+  _moveServos(T2/2,bend1);
+  _moveServos(T2/2,bend2);
 }
 
 //---------------------------------------------------------
@@ -303,20 +322,16 @@ void Otto::shakeLeg (int steps,int T,int dir){
   int numberLegMoves=2;
 
   //Parameters of all the movements. Default: Right leg
-  int shake_leg1[4]={90, 90, 58, 35};
-  int shake_leg2[4]={90, 90, 58, 120};
-  int shake_leg3[4]={90, 90, 58, 60};
-  int homes[4]={90, 90, 90, 90};
+  int shake_leg2[4]={90, 90, 50, 120};
+  int shake_leg3[4]={90, 90,50, 60};
 
   //Changes in the parameters if left leg is chosen
   if(dir==-1)
   {
-    shake_leg1[2]=180-35;
-    shake_leg1[3]=180-58;
     shake_leg2[2]=180-120;
-    shake_leg2[3]=180-58;
+    shake_leg2[3]=120;
     shake_leg3[2]=180-60;
-    shake_leg3[3]=180-58;
+    shake_leg3[3]=120;
   }
 
   //Time of the bend movement. Fixed parameter to avoid falls
@@ -327,9 +342,8 @@ void Otto::shakeLeg (int steps,int T,int dir){
 
   for (int j=0; j<steps;j++)
   {
-  //Bend movement
-  _moveServos(T2/2,shake_leg1);
-  _moveServos(T2/2,shake_leg2);
+    //Bend movement
+    _bend(dir);
 
     //Shake movement
     for (int i=0;i<numberLegMoves;i++)
@@ -337,7 +351,7 @@ void Otto::shakeLeg (int steps,int T,int dir){
     _moveServos(T/(2*numberLegMoves),shake_leg3);
     _moveServos(T/(2*numberLegMoves),shake_leg2);
     }
-    _moveServos(500,homes); //Return to home position
+    _moveHome(); //Return to home position
   }
 
   delay(T);
