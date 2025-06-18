@@ -401,3 +401,22 @@ Blockly.Arduino['otto_getsensor'] = function(block) {
   var code = 'Otto.getSensor()';
   return [code, Blockly.Arduino.ORDER_ATOMIC];
 };
+
+Blockly.Blocks['otto_pause'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldImage('media/otto_emoji.png', 22, 22, "*"))
+            .appendField('delay')
+        this.appendValueInput("duration").setCheck("Number")
+            .appendField("ms")
+        this.setInputsInline(true);
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+    }
+}
+
+Blockly.Arduino['otto_pause'] = (block) => {
+    var duration = Blockly.Arduino.valueToCode(block, 'duration', Blockly.Arduino.ORDER_ATOMIC);
+    var code = 'delay(' + duration + ');\n';
+    return code;
+}
