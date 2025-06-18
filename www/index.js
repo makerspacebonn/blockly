@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-var { ipcRenderer, shell, clipboard } = require("electron")
-var { exec } = require('child_process')
-var sp = require('serialport')
-var fs = require('fs')
-var path = require('path')
-appVersion = '9.9.9'
-=======
 const { ipcRenderer, shell, clipboard } = require("electron")
 const { exec } = require('child_process')
 const serialPort = require('serialport')
@@ -15,7 +7,6 @@ const fs = require('fs/promises')
 const path = require("node:path");
 const {shellPathSync} = require("shell-path");
 const appVersion = '9.9.9'
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 
 //var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../../compilation/arduino')
 var arduino_basepath = process.platform == 'win32' ? './compilation/arduino' : path.join(__dirname, '../compilation/arduino')
@@ -128,14 +119,8 @@ window.addEventListener('load', async function load(event) {
 		$('#aboutModal').modal('hide')
 		ipcRenderer.send("version", "")
 	})
-<<<<<<< HEAD
-
-	$('#btn_term').on('click', function(){
-		if (portserie.value=="com"){
-=======
 	$('#btn_term').on('click', function () {
 		if (portserie.value == "com") {
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 			$("#message").modal("show")
 			messageDiv.style.color = '#ff0000'
 			messageDiv.innerHTML = Blockly.Msg.com2 + quitDiv
@@ -147,19 +132,10 @@ window.addEventListener('load', async function load(event) {
 			ipcRenderer.send("prompt", "")
 		}
 	})
-<<<<<<< HEAD
-
-	$('#btn_factory').on('click', function(){
-		ipcRenderer.send("factory", "")
-	})
-
-	$('#btn_verify').on('click', function(){
-=======
 	$('#btn_factory').on('click', function () {
 		ipcRenderer.send("factory", "")
 	})
 	$('#btn_verify').on('click', function () {
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 		console.log("verify")
 		if (localStorage.getItem('content') == "off") {
 			var data = editor.getValue()
@@ -199,21 +175,6 @@ window.addEventListener('load', async function load(event) {
 				if (err) return console.log(err)
 			})
 
-<<<<<<< HEAD
-		var upload_arg = window.profile[carte].upload_arg
-		console.log("upload arg", upload_arg)
-		var cmd = `${arduino_ide_cmd} compile -b ` + upload_arg +' sketch/sketch.ino'
-		console.log("cmd", cmd)
-			exec(cmd , {cwd: arduino_basepath} , (error, stdout, stderr) => {
-			if (error) {
-
-						messageDiv.style.color = '#ff0000'
-						messageDiv.innerHTML = error.toString() + quitDiv
-						return
-						}
-
-			    messageDiv.style.color = '#009000'
-=======
 			var upload_arg = window.profile[carte].upload_arg
 			console.log("upload arg", upload_arg)
 			var cmd = `${arduino_ide_cmd} compile -b ` + upload_arg + ' sketch/sketch.ino'
@@ -246,7 +207,6 @@ window.addEventListener('load', async function load(event) {
 				}
 
 				messageDiv.style.color = '#009000'
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 				messageDiv.innerHTML = Blockly.Msg.check + ': ✅ Code is ready to upload' + quitDiv
 				$('#message').modal('show');
 				setTimeout(function () {
@@ -259,12 +219,7 @@ window.addEventListener('load', async function load(event) {
 		}
 		localStorage.setItem("verif", true)
 	})
-<<<<<<< HEAD
-
-	$('#btn_flash').on('click',async function(){
-=======
 	$('#btn_flash').on('click', async function () {
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 		console.log('Button flash')
 		var data = $('#pre_previewArduino').text()
 		var carte = localStorage.getItem('card')
@@ -286,15 +241,8 @@ window.addEventListener('load', async function load(event) {
 		if (localStorage.getItem('verif') == "false") {
 			messageDiv.style.color = '#000000'
 			messageDiv.innerHTML = Blockly.Msg.check + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
+			//fs.writeFile('./compilation/arduino/ino/sketch.ino', data, function(err){
 			console.log('writing to ', `${arduino_basepath}/sketch/sketch.ino`)
-<<<<<<< HEAD
-			fs.writeFile(`${arduino_basepath}/sketch/sketch.ino`, data, function(err){
-				if (err) return console.log(err)
-			})
-
-
-			var cmd = `${arduino_ide_cmd} compile -b ` + upload_arg +'  --libraries userlibs/libraries sketch/sketch.ino'
-=======
 			try {
 				await fs.writeFile(`${arduino_basepath}/sketch/sketch.ino`, data)
 				console.log("writing done")
@@ -307,33 +255,30 @@ window.addEventListener('load', async function load(event) {
 
 			var cmd = `${arduino_ide_cmd} compile -b ` + upload_arg + '  --libraries userlibs/libraries sketch/sketch.ino'
 			//cmd = 'arduino-cli.exe compile -b esp32:esp32:esp32 --config-file arduino-cli.yaml --libraries userlibs/libraries sketch/sketch.ino'
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 			console.log('basepath: ', arduino_basepath)
 			console.log("running: ", cmd)
 			const util = require('node:util');
 			const exec = util.promisify(require('node:child_process').exec);
 
 			try {
-<<<<<<< HEAD
-				const { stderr } = await exec(cmd, {cwd: `${arduino_basepath}`});
-=======
 				const {stdout, stderr} = await exec(cmd, {cwd: `${arduino_basepath}`});
 				console.log('stdout:', stdout);
 
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 				if (typeof stderr !== 'undefined' && stderr !== '') {
+					console.log(typeof stderr)
+					console.log('stderr')
+					console.log(`:${stderr}:`)
+
 					messageDiv.style.color = '#ff0000'
 					messageDiv.innerHTML = stderr + quitDiv
 					return
 				}
 			} catch (error) {
+				console.log('catch')
 				messageDiv.style.color = '#ff0000'
 				messageDiv.innerHTML = error.toString() + quitDiv
 				return
 			}
-<<<<<<< HEAD
-			
-=======
 
 			console.log('continue')
 
@@ -342,22 +287,12 @@ window.addEventListener('load', async function load(event) {
 			messageDiv.innerHTML = Blockly.Msg.check + ': ✅ OK' + quitDiv
 
 
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 			messageDiv.style.color = '#000000'
 			messageDiv.innerHTML = Blockly.Msg.upload + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
 
 			cmd = `${arduino_ide_cmd} upload --port ` + portserie.value + ' -b ' + upload_arg + ' sketch/sketch.ino'
 			//cmd = 'arduino-cli.exe upload -b esp32:esp32:esp32 --port ' + portserie.value + ' sketch/sketch.ino'
 			console.log('running command: ', cmd)
-<<<<<<< HEAD
-			const { stderr2 } = exec( cmd, {cwd:`${arduino_basepath}`}, function(err, stdout, stderr){
-			if (typeof stderr2 !== 'undefined' && stderr2 !== '') {
-				messageDiv.style.color = '#ff0000'
-				messageDiv.innerHTML = stderr2 + quitDiv
-				return
-			}
-			console.log("ok")
-=======
 			const {stdout2, stderr2} = exec(cmd, {cwd: `${arduino_basepath}`}, function (err, stdout, stderr) {
 				console.log(stdout2, stderr2)
 				//exec('flash.bat ' + cpu + ' ' + prog + ' '+ com + ' ' + speed, {cwd: './compilation/arduino'} , function(err, stdout, stderr){
@@ -367,7 +302,6 @@ window.addEventListener('load', async function load(event) {
 					return
 				}
 				console.log("ok")
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 				uploadOK()
 			})
 			localStorage.setItem("verif", false)
@@ -377,14 +311,8 @@ window.addEventListener('load', async function load(event) {
 
 		messageDiv.style.color = '#000000'
 		messageDiv.innerHTML = Blockly.Msg.upload + '<i class="fa fa-spinner fa-pulse fa-1_5x fa-fw"></i>'
-<<<<<<< HEAD
-		
-		if ( prog == "python" ) {
-			if ( cpu == "cortexM0" ) {
-=======
 		if (prog == "python") {
 			if (cpu == "cortexM0") {
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 				var cheminFirmware = "./compilation/python/firmware.hex"
 				var fullHexStr = ""
 				exec('wmic logicaldisk get volumename', function (err, stdout) {
@@ -448,18 +376,12 @@ window.addEventListener('load', async function load(event) {
 		}
 		localStorage.setItem("verif", false)
 	})
-<<<<<<< HEAD
-
-	$('#btn_saveino').on('click', function(){
-		if (localStorage.getItem("prog") == "python") { ipcRenderer.send('save-py') } else { ipcRenderer.send('save-ino') }
-=======
 	$('#btn_saveino').on('click', function () {
 		if (localStorage.getItem("prog") == "python") {
 			ipcRenderer.send('save-py')
 		} else {
 			ipcRenderer.send('save-ino')
 		}
->>>>>>> 32e1938260624256a04a46d379eb99d0284b038f
 	})
 	$('#btn_saveXML').on('click', function () {
 		console.log('clicked saveXML')
