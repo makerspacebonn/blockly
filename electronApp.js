@@ -1,5 +1,4 @@
 var {electron, ipcMain, app, BrowserWindow, globalShortcut, dialog} = require('electron')
-var { autoUpdater } = require("electron-updater")
 var path = require('path')
 var mainWindow
 var termWindow
@@ -7,8 +6,6 @@ var factoryWindow
 var promptWindow
 var promptOptions
 var promptAnswer
-autoUpdater.autoDownload = false
-autoUpdater.logger = null
 console.log('appVersion', app.getVersion())
 function createWindow () {
 	mainWindow = new BrowserWindow({
@@ -146,14 +143,20 @@ ipcMain.on('save-py', function (event) {
 		event.sender.send('saved-py', filename)
 	})
 })
-ipcMain.on('save-bloc', function (event) {
+ipcMain.on('save-bloc', function (event, payload) {
+	console.log('save-block', payload)
 	dialog.showSaveDialog(mainWindow,{
 		title: 'Save format .BLOC',
 		defaultPath: 'Otto_block',
 		filters: [{ name: 'Ottoblockly', extensions: ['bloc'] }]
-	},
-	function(filename){
-		event.sender.send('saved-bloc', filename)
+	})
+	.then((param) => {
+		console.log(param)
+		event.sender.send('saved-bloc', param)
+	})
+	.catch(error => {
+		console.log("error", error)
+		event.sender.send('error', error)
 	})
 })
 ipcMain.on('save-csv', function (event) {
@@ -166,42 +169,6 @@ ipcMain.on('save-csv', function (event) {
 		event.sender.send('saved-csv', filename)
 	})
 })
-autoUpdater.on('error', function(error) {
-	dialog.showErrorBox('Error: ', error == null ? "unknown" : (error.stack || error).toString())
-})
-autoUpdater.on('update-available', function() {
-	dialog.showMessageBox(mainWindow,{
-		type: 'none',
-		title: 'Update',
-		message: "A new version is available, do you want to download and install it now?",
-		buttons: ['Yes', 'No'],
-		cancelId: 1,
-		noLink: true
-	},
-	function(buttonIndex)  {
-		if (buttonIndex === 0) {
-			autoUpdater.downloadUpdate()
-		}
-		else {
-			return
-		}
-	})
-})
-autoUpdater.on('update-not-available', function() {
-	dialog.showMessageBox(mainWindow,{
-		title: 'Updated',
-		message: 'Your version is up to date.'
-	})
-})
-autoUpdater.on('update-downloaded', function() {
-	dialog.showMessageBox(mainWindow,{
-		title: 'Updated',
-		message: "Download finished, the application will install then restart.."
-	}, function() {
-		setImmediate(function(){
-			autoUpdater.quitAndInstall()
-		})
-	})
-})
+
 module.exports.open_console = open_console
 module.exports.refresh = refresh

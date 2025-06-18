@@ -226,7 +226,7 @@ BlocklyDuino.change_card = function() {
 	$("#boards").blur();
 	var new_card = $("#boards").val();
 	var new_prog = window.profile[new_card].prog;
-	if (window.profile[new_card].cpu != window.profile[card].cpu) {
+	if (window.profile[new_card].cpu !== window.profile[card].cpu || (window.profile[new_card].toolbox && window.profile[new_card].toolbox !== toolbox)) {
 		if (window.confirm(MSG['arduino_card'] + window.profile[new_card].description + ' ?')){
 			$('#arduino_card_mini_picture').attr("src", profile[new_card]['picture']);
 			if (new_prog != "python") {
@@ -240,8 +240,10 @@ BlocklyDuino.change_card = function() {
 					mystartfile= '<xml xmlns="http://www.w3.org/1999/xhtml">';
 					mystartfile +=  '<block type="base_setup_loop" x="-4" y="48"></block>';
 					mystartfile += '</xml>';
-
-				if (window.profile[new_card].cpu == "esp8266")
+				console.log("toolbox: ", window.profile[new_card].toolbox)
+				if(window.profile[new_card].toolbox && window.profile[new_card].toolbox !='')
+				    new_toolbox = window.profile[new_card].toolbox
+				else if (window.profile[new_card].cpu == "esp8266")
 				  new_toolbox = "toolbox_arduino_all-esp8266"
 				else if (window.profile[new_card].cpu == "esp32")
 					new_toolbox = "toolbox_arduino_all-esp32"

@@ -544,7 +544,8 @@ var profile = {
 		prog: "arduino",
 		usb: "micro USB",
 		voltage: "3,3V",
-		inout: "20"
+		inout: "20",
+		toolbox: "toolbox_arduino_all-msbottoesp32"
 	},
 	MRTnode: {
 	    description: "MRTnode ESP32",

@@ -1,4 +1,5 @@
 *.DS_Store
+/compilation/arduino/sketch/
 /compilation/arduino/packages/
 /compilation/arduino/suppr/
 /compilation/arduino/tmp/
@@ -16,3 +17,4 @@
 /compilation/arduino/inventory.yaml
 /dist
 /node_modules/
+.idea

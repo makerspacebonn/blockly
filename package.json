@@ -132,7 +132,9 @@
  "dependencies": {
   "ajv": "^8.17.1",
   "child_process": "^1.0.2",
-  "electron-updater": "^6.6.5",
-  "serialport": "^13.0.0"
+  "electron-updater": "^6.6.2",
+  "hasbin": "^1.2.3",
+  "serialport": "^13.0.0",
+  "shell-path": "^3.0.0"
  }
 }
